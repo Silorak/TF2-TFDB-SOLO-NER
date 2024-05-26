@@ -181,7 +181,7 @@ public void OnPlayerDeath(Event hEvent, char[] strEventName, bool bDontBroadcast
 	}
 
 	// Someone died, both teams had 1 player left
-	if (GetTeamAliveCount(g_iLastDeadTeam) == 1 && GetTeamAliveCount(AnalogueTeam(g_iLastDeadTeam)) == 1)
+	if (GetTeamAliveCount(g_iLastDeadTeam) <= 1 && GetTeamAliveCount(AnalogueTeam(g_iLastDeadTeam)) <= 1)
 	{
 		// First respawn solo players
 		if (!g_soloQueue.Empty)
@@ -244,7 +244,7 @@ public void OnPlayerDeath(Event hEvent, char[] strEventName, bool bDontBroadcast
 					}
 
 					// Do not respawn solo players but add them back in queue
-					if (g_bSoloEnabled[iPlayer] && !IsSpectator(iPlayer))
+					if (g_bSoloEnabled[iPlayer])
 					{
 						// May be a redundant check, check if there is 'room' for using solo, the above code should've made the round not end already
 						if ((GetClientTeam(iPlayer) == view_as<int>(TFTeam_Red) ? --iRedTeamCount : --iBlueTeamCount) > 0)

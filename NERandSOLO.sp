@@ -139,7 +139,7 @@ public void OnSetupFinished(Event hEvent, char[] strEventName, bool bDontBroadca
 			if ((GetClientTeam(iClient) == view_as<int>(TFTeam_Red) ? --iRedTeamCount : --iBlueTeamCount) > 0)
 			{
 				g_soloQueue.Push(iClient);
-				SDKHooks_TakeDamage(iClient, iClient, iClient, 9999.0);
+				ForcePlayerSuicide(iClient);
 			}
 			// This person is last alive in team after all solo's, can't solo
 			else
@@ -189,7 +189,7 @@ public void OnPlayerDeath(Event hEvent, char[] strEventName, bool bDontBroadcast
 			int iSoloer = g_soloQueue.Pop();
 
 			// Handles people who don't have solo enabled anymore, but are still left in queue
-			while (!g_bSoloEnabled[iSoloer] && !g_soloQueue.Empty && !IsSpectator(iSoloer))
+			while (!g_bSoloEnabled[iSoloer] && !g_soloQueue.Empty && IsSpectator(iSoloer))
 				iSoloer = g_soloQueue.Pop();
 			
 			if (g_bSoloEnabled[iSoloer] && !IsSpectator(iSoloer))
@@ -274,7 +274,7 @@ public void OnPlayerDeath(Event hEvent, char[] strEventName, bool bDontBroadcast
 				{
 					g_soloQueue.Push(iWinner);
 					CPrintToChat(iWinner, "%t", "Dodgeball_Solo_NER_Notify_Not_Respawned");
-					SDKHooks_TakeDamage(iWinner, iWinner, iWinner, 9999.0);
+					ForcePlayerSuicide(iClient);
 				}
 				// Can't solo, last in team
 				else
@@ -375,7 +375,7 @@ public Action CmdSolo(int iClient, int iArgs)
 		// Alive, kill player & add to queue
 		if (IsValidClient(iClient) && g_bRoundStarted)
 		{
-			SDKHooks_TakeDamage(iClient, iClient, iClient, 9999.0);
+			ForcePlayerSuicide(iClient);
 			g_soloQueue.Push(iClient);
 		}
 
